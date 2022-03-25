@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'], function()
 {
-    Route::post('/logs', 'LogController@store');
+    Route::get('/logs', 'LogController@store');
 });
