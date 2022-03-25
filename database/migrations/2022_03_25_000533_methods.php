@@ -13,7 +13,10 @@ class Methods extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('methods', function (Blueprint $table) {
+            $table->id();
+            $table->string('description');
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class Methods extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('methods');
     }
 }

@@ -13,7 +13,10 @@ class Paths extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('paths', function (Blueprint $table) {
+            $table->id();
+            $table->string('description');
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class Paths extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('paths');
     }
 }

@@ -13,7 +13,21 @@ class Services extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedSmallInteger('connect_timeout')->nullable();
+            $table->unsignedBigInteger('created_at')->nullable();
+            $table->string('host')->nullable();
+            $table->string('id_string')->nullable();
+            $table->string('name')->nullable();
+            $table->string('path')->nullable();
+            $table->unsignedSmallInteger('port')->nullable();
+            $table->string('protocol')->nullable();
+            $table->unsignedSmallInteger('read_timeout')->nullable();
+            $table->unsignedSmallInteger('retries')->nullable();
+            $table->unsignedBigInteger('updated_at')->nullable();
+            $table->unsignedSmallInteger('write_timeout')->nullable();
+        });
     }
 
     /**
@@ -23,6 +37,6 @@ class Services extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('services');
     }
 }

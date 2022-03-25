@@ -13,7 +13,12 @@ class Latencies extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('latencies', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedSmallInteger('proxy')->nullable();
+            $table->unsignedSmallInteger('gateway')->nullable();
+            $table->unsignedSmallInteger('request')->nullable();
+        });
     }
 
     /**
@@ -23,6 +28,6 @@ class Latencies extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('latencies');
     }
 }

@@ -13,7 +13,10 @@ class MethodRoute extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('method_route', function (Blueprint $table) {
+            $table->unsignedBigInteger('method_id')->index();
+            $table->unsignedBigInteger('route_id')->index();
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class MethodRoute extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('method_route');
     }
 }

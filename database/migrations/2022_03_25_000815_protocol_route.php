@@ -13,7 +13,10 @@ class ProtocolRoute extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('protocol_route', function (Blueprint $table) {
+            $table->unsignedBigInteger('protocol_id')->index();
+            $table->unsignedBigInteger('route_id')->index();
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class ProtocolRoute extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('protocol_route');
     }
 }

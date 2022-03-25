@@ -13,7 +13,10 @@ class Protocols extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('protocols', function (Blueprint $table) {
+            $table->id();
+            $table->string('description');
+        });
     }
 
     /**
@@ -23,6 +26,6 @@ class Protocols extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('protocols');
     }
 }
