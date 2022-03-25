@@ -16,7 +16,7 @@ class CreateLatencies extends Migration
         Schema::create('latencies', function (Blueprint $table) {
             $table->id();
             $table->unsignedSmallInteger('proxy')->nullable();
-            $table->unsignedSmallInteger('gateway')->nullable();
+            $table->unsignedSmallInteger('kong')->nullable();
             $table->unsignedSmallInteger('request')->nullable();
         });
     }
