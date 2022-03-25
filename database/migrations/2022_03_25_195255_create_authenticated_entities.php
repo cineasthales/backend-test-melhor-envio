@@ -15,7 +15,7 @@ class CreateAuthenticatedEntities extends Migration
     {
         Schema::create('authenticated_entities', function (Blueprint $table) {
             $table->id();
-            $table->string('consumer_id')->nullable();
+            $table->string('uuid')->nullable();
         });
     }
 
