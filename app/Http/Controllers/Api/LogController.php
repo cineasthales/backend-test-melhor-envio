@@ -52,10 +52,6 @@ class LogController extends Controller
                 'route_id' => $routeId,
                 'latency_id' => $latencyId,
             ]);
-
-            dd('foi');
-
-            break;
         }
     }
 
@@ -63,16 +59,26 @@ class LogController extends Controller
     {
         $formattedArray = [];
         $dataArray = (array) $dataObject;
+        $hasUUID = false;
 
         foreach ($dataArray as $key => $value) {
             if (!is_object($value) && !is_array($value)) {
-                $key = $key == 'id' ? 'uuid' : strtolower(str_replace('-', '_', $key));
-                $formattedArray[$key] = $value; 
+                if ($key == 'id') {
+                    $formattedArray['uuid'] = $value;
+                    $hasUUID = true;
+                } else {
+                    $formattedKey = strtolower(str_replace('-', '_', $key));
+                    $formattedArray[$formattedKey] = $value;
+                }
             }
         }
 
         if ($foreignKeys) {
             $formattedArray = array_merge($formattedArray, $foreignKeys);
+        }
+
+        if ($hasUUID) {
+            return $this->findOrInsert($tableName, 'uuid', 'uuid', $formattedArray);
         }
 
         return $this->insert($tableName, $formattedArray);
@@ -92,7 +98,7 @@ class LogController extends Controller
 
     private function findOrInsert($tableName, $tableField, $dataKey, $data) {
         $result = DB::table($tableName)->where($tableField, $data[$dataKey])->first();
-        return $result ? $result->id : $this->insert($tableName, [$tableField => $data[$dataKey]]);
+        return $result ? $result->id : $this->insert($tableName, $tableField == 'uuid' ? $data : [$tableField => $data[$dataKey]]);
     }
 
     private function insert($tableName, $data) {
