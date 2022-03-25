@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AuthenticatedEntities extends Migration
+class CreateQuerystringRequest extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AuthenticatedEntities extends Migration
      */
     public function up()
     {
-        Schema::create('authenticated_entities', function (Blueprint $table) {
-            $table->id();
-            $table->string('consumer_id')->nullable();
+        Schema::create('querystring_request', function (Blueprint $table) {
+            $table->unsignedBigInteger('querystring_id')->index();
+            $table->unsignedBigInteger('request_id')->index();
         });
     }
 
@@ -26,6 +26,6 @@ class AuthenticatedEntities extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authenticated_entities');
+        Schema::dropIfExists('querystring_request');
     }
 }

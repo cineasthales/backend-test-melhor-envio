@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Paths extends Migration
+class CreateProtocolRoute extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class Paths extends Migration
      */
     public function up()
     {
-        Schema::create('paths', function (Blueprint $table) {
-            $table->id();
-            $table->string('description');
+        Schema::create('protocol_route', function (Blueprint $table) {
+            $table->unsignedBigInteger('protocol_id')->index();
+            $table->unsignedBigInteger('route_id')->index();
         });
     }
 
@@ -26,6 +26,6 @@ class Paths extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('paths');
+        Schema::dropIfExists('protocol_route');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PathRoute extends Migration
+class CreatePaths extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class PathRoute extends Migration
      */
     public function up()
     {
-        Schema::create('path_route', function (Blueprint $table) {
-            $table->unsignedBigInteger('path_id')->index();
-            $table->unsignedBigInteger('route_id')->index();
+        Schema::create('paths', function (Blueprint $table) {
+            $table->id();
+            $table->string('description');
         });
     }
 
@@ -26,6 +26,6 @@ class PathRoute extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('path_route');
+        Schema::dropIfExists('paths');
     }
 }

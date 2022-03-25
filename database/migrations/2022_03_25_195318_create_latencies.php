@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Methods extends Migration
+class CreateLatencies extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class Methods extends Migration
      */
     public function up()
     {
-        Schema::create('methods', function (Blueprint $table) {
+        Schema::create('latencies', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->unsignedSmallInteger('proxy')->nullable();
+            $table->unsignedSmallInteger('gateway')->nullable();
+            $table->unsignedSmallInteger('request')->nullable();
         });
     }
 
@@ -26,6 +28,6 @@ class Methods extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('methods');
+        Schema::dropIfExists('latencies');
     }
 }

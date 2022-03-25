@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Services extends Migration
+class CreateServices extends Migration
 {
     /**
      * Run the migrations.
@@ -18,7 +18,7 @@ class Services extends Migration
             $table->unsignedSmallInteger('connect_timeout')->nullable();
             $table->unsignedBigInteger('created_at')->nullable();
             $table->string('host')->nullable();
-            $table->string('id_string')->nullable();
+            $table->string('uuid')->nullable();
             $table->string('name')->nullable();
             $table->string('path')->nullable();
             $table->unsignedSmallInteger('port')->nullable();

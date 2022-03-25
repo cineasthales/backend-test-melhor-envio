@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Responses extends Migration
+class CreateAuthenticatedEntities extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class Responses extends Migration
      */
     public function up()
     {
-        Schema::create('responses', function (Blueprint $table) {
+        Schema::create('authenticated_entities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedSmallInteger('status')->nullable();
-            $table->string('size')->nullable();
-            $table->unsignedBigInteger('header_id')->index();
+            $table->string('consumer_id')->nullable();
         });
     }
 
@@ -28,6 +26,6 @@ class Responses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('responses');
+        Schema::dropIfExists('authenticated_entities');
     }
 }

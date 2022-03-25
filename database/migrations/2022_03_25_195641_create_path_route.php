@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Latencies extends Migration
+class CreatePathRoute extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class Latencies extends Migration
      */
     public function up()
     {
-        Schema::create('latencies', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedSmallInteger('proxy')->nullable();
-            $table->unsignedSmallInteger('gateway')->nullable();
-            $table->unsignedSmallInteger('request')->nullable();
+        Schema::create('path_route', function (Blueprint $table) {
+            $table->unsignedBigInteger('path_id')->index();
+            $table->unsignedBigInteger('route_id')->index();
         });
     }
 
@@ -28,6 +26,6 @@ class Latencies extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('latencies');
+        Schema::dropIfExists('path_route');
     }
 }

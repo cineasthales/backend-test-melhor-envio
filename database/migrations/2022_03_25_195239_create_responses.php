@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Requests extends Migration
+class CreateResponses extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class Requests extends Migration
      */
     public function up()
     {
-        Schema::create('requests', function (Blueprint $table) {
+        Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->string('method')->nullable();
-            $table->string('uri')->nullable();
-            $table->string('url')->nullable();
+            $table->unsignedSmallInteger('status')->nullable();
             $table->string('size')->nullable();
-            $table->string('querystring')->nullable();
-            $table->unsignedBigInteger('header_id')->index();
+            $table->unsignedBigInteger('response_header_id')->index();
         });
     }
 
@@ -31,6 +28,6 @@ class Requests extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('requests');
+        Schema::dropIfExists('responses');
     }
 }
