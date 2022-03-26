@@ -89,7 +89,8 @@ class LogController extends Controller
         return $this->insert($tableName, $formattedArray);
     }
 
-    private function insertPivot($dataObject, $otherTableName, $otherTableField, $pivotTableName, $otherTableKey, $thisTableKey, $thisTableId) {
+    private function insertPivot($dataObject, $otherTableName, $otherTableField, $pivotTableName, $otherTableKey, $thisTableKey, $thisTableId)
+    {
         $dataArray = (array) $dataObject;
         $arrayLength = count($dataArray);
         for ($i = 0; $i < $arrayLength; $i++) {
@@ -101,12 +102,14 @@ class LogController extends Controller
         }
     }
 
-    private function findOrInsert($tableName, $tableField, $dataKey, $data) {
+    private function findOrInsert($tableName, $tableField, $dataKey, $data)
+    {
         $result = DB::table($tableName)->where($tableField, $data[$dataKey])->first();
         return $result ? $result->id : $this->insert($tableName, $tableField == 'uuid' ? $data : [$tableField => $data[$dataKey]]);
     }
 
-    private function insert($tableName, $data) {
+    private function insert($tableName, $data)
+    {
         return DB::table($tableName)->insertGetId($data);
     }
 }
