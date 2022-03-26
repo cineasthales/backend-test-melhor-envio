@@ -21,7 +21,12 @@ class LogController extends Controller
 
         $textLines = preg_split('/\r\n|\r|\n/', $text);
 
-        foreach ($textLines as $jsonLine) {
+        $offset = 99900;
+        $length = 100;
+
+        $textToProcess = array_slice($textLines, $offset, $length);
+
+        foreach ($textToProcess as $jsonLine) {
             $line = json_decode($jsonLine);
 
             $requestHeaderId = $this->formatObjectAndSave('request_headers', $line->request->headers);
