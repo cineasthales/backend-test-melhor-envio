@@ -15,7 +15,7 @@ class AuthenticatedEntityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function report(Request $request)
+    public function generateRequestsReport(Request $request)
     {
         $contents = DB::table('requests')
             ->select('authenticated_entities.uuid', 'requests.method', 'requests.uri',
@@ -28,12 +28,12 @@ class AuthenticatedEntityController extends Controller
             ->get();
 
         $report = [];
-        $report[0] = 'uuid,method,uri,url,size,accept,host,user_agent' . PHP_EOL;
+        $report[0] = 'authenticated_entity_uuid,method,uri,url,size,accept,host,user_agent' . PHP_EOL;
 
         foreach ($contents as $content) {
             $report[] = implode(',', (array) $content) . PHP_EOL;
         }
 
-        Storage::disk('local')->put('report.csv', $report);
+        Storage::disk('reports')->put('report_requests_by_consumer.csv', $report);
     }
 }
