@@ -20,6 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['namespace' => 'Api'], function()
 {
-    Route::get('/logs', 'LogController@store');
-    Route::get('/report', 'AuthenticatedEntityController@report');
+    Route::get('/logs', 'LogController@store'); // TODO: change to POST
+    Route::get('/authenticated-entities/report/requests', 'AuthenticatedEntityController@generateRequestsReport');
+    Route::get('/services/report/requests', 'ServiceController@generateRequestsReport');
+    Route::get('/services/report/latencies', 'ServiceController@generateLatenciesReport');
 });
