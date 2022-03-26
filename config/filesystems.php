@@ -47,6 +47,11 @@ return [
             'root' => storage_path('logs'),
         ],
 
+        'reports' => [
+            'driver' => 'local',
+            'root' => storage_path('reports'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
