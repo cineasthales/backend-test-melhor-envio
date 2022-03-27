@@ -20,7 +20,7 @@ class ReportController extends Controller
             return response()->json(['500' => 'Internal Server Error']);
         }
 
-        return response('teste', 200);
+        return response()->json(['200' => 'OK']);
     }
 
     public function generateRequestsByService()
