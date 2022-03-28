@@ -11,7 +11,10 @@ class LogController extends Controller
 {
     public function store(Request $request)
     {
-        if ($request->offset && $request->length && ($request->offset + $request->length) > 10000) {
+        $offset = $request->offset ? $request->offset : 0;
+        $length = $request->length ? $request->length : 100;
+
+        if ($offset < 0 || $length < 1 || $length > 5000 || ($offset + $length) > 100000) {
             return response()->json(['400' => 'Bad Request']);
         }
 
@@ -22,9 +25,6 @@ class LogController extends Controller
         }
 
         $textLines = preg_split('/\r\n|\r|\n/', $text);
-
-        $offset = $request->offset ? $request->offset : 0;
-        $length = $request->length ? $request->length : 100;
 
         $textToProcess = array_slice($textLines, $offset, $length);
 
