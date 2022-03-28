@@ -16,7 +16,7 @@ class LogController extends Controller
         $offset = isset($request->offset) ? $request->offset : 0;
         $length = isset($request->length) ? $request->length : 100;
 
-        if ($offset < 0 || $length < 1 || $length > 5000 || ($offset + $length) > 100000) {
+        if ($offset < 0 || $length < 1 || $length > 3000 || ($offset + $length) > 100000) {
             throw new BadRequest;
         }
 
@@ -30,8 +30,16 @@ class LogController extends Controller
 
         $textToProcess = array_slice($textLines, $offset, $length);
 
+        $entryForeignKeys = [
+            'authenticated_entity_id' => 0,
+            'service_id' => 0,
+            'latency_id' => 0,
+            'request_id' => 0,
+            'response_id' => 0,
+            'route_id' => 0,
+        ];
+
         foreach ($textToProcess as $jsonLine) {
-            $entry = [];
             $line = json_decode($jsonLine);
 
             try {
@@ -153,10 +161,15 @@ class LogController extends Controller
         $arrayLength = count($dataArray);
         for ($i = 0; $i < $arrayLength; $i++) {
             $otherTableId = $this->findOrInsert($otherTableName, 'description', $i, $dataArray);
-            $this->insert($pivotTableName, [
-                $otherTableKey => $otherTableId,
-                $thisTableKey => $thisTableId,
-            ]);
+            if (DB::table($pivotTableName)
+                    ->where($otherTableKey, $otherTableId)
+                    ->where($thisTableKey, $thisTableId)
+                    ->doesntExist()) {
+                DB::table($pivotTableName)->insert([
+                    $otherTableKey => $otherTableId,
+                    $thisTableKey => $thisTableId,
+                ]);
+            }
         }
     }
 
