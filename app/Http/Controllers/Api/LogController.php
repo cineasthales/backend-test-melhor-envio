@@ -11,6 +11,10 @@ class LogController extends Controller
 {
     public function store(Request $request)
     {
+        if ($request->offset && $request->length && ($request->offset + $request->length) > 10000) {
+            return response()->json(['400' => 'Bad Request']);
+        }
+
         try {
             $text = Storage::disk('logs')->get('logs.txt');
         } catch (\Exception $e) {
@@ -18,10 +22,6 @@ class LogController extends Controller
         }
 
         $textLines = preg_split('/\r\n|\r|\n/', $text);
-
-        if ($request->offset && $request->length && ($request->offset + $request->length) > 10000) {
-            return response()->json(['400' => 'Bad Request']);
-        }
 
         $offset = $request->offset ? $request->offset : 0;
         $length = $request->length ? $request->length : 100;
@@ -33,23 +33,80 @@ class LogController extends Controller
             $line = json_decode($jsonLine);
 
             try {
-                $requestHeaderId = $this->formatObjectAndSave('request_headers', $line->request->headers);
-                $responseHeaderId = $this->formatObjectAndSave('response_headers', $line->response->headers);
+                $requestHeaderId = $this->formatObjectAndSave(
+                    'request_headers',
+                    $line->request->headers
+                );
+                $responseHeaderId = $this->formatObjectAndSave(
+                    'response_headers',
+                    $line->response->headers
+                );
+                $entryForeignKeys['authenticated_entity_id'] = $this->formatObjectAndSave(
+                    'authenticated_entities',
+                    $line->authenticated_entity->consumer_id
+                );
+                $entryForeignKeys['service_id']  = $this->formatObjectAndSave(
+                    'services',
+                    $line->service
+                );
+                $entryForeignKeys['latency_id'] = $this->formatObjectAndSave(
+                    'latencies',
+                    $line->latencies
+                );
+                $entryForeignKeys['request_id'] = $this->formatObjectAndSave(
+                    'requests',
+                    $line->request,
+                    ['request_header_id' => $requestHeaderId]
+                );
+                $entryForeignKeys['response_id'] = $this->formatObjectAndSave(
+                    'responses',
+                    $line->response,
+                    ['response_header_id' => $responseHeaderId]
+                );
+                $entryForeignKeys['route_id'] = $this->formatObjectAndSave(
+                    'routes',
+                    $line->route,
+                    ['service_id' => $entryForeignKeys['service_id']]
+                );
 
-                $entryForeignKeys['service_id']  = $this->formatObjectAndSave('services', $line->service);
-                $entryForeignKeys['latency_id'] = $this->formatObjectAndSave('latencies', $line->latencies);
-                $entryForeignKeys['authenticated_entity_id'] = $this->formatObjectAndSave('authenticated_entities', $line->authenticated_entity->consumer_id);
+                $this->insertPivot(
+                    $line->request->querystring,
+                    'querystrings',
+                    'querystring_request',
+                    'querystring_id',
+                    'request_id',
+                    $entryForeignKeys['request_id']
+                );
+                $this->insertPivot(
+                    $line->route->methods,
+                    'methods',
+                    'method_route',
+                    'method_id',
+                    'route_id',
+                    $entryForeignKeys['route_id']
+                );
+                $this->insertPivot(
+                    $line->route->paths,
+                    'paths',
+                    'path_route',
+                    'path_id',
+                    'route_id',
+                    $entryForeignKeys['route_id']
+                );
+                $this->insertPivot(
+                    $line->route->protocols,
+                    'protocols',
+                    'protocol_route',
+                    'protocol_id',
+                    'route_id',
+                    $entryForeignKeys['route_id']
+                );
 
-                $entryForeignKeys['request_id'] = $this->formatObjectAndSave('requests', $line->request, ['request_header_id' => $requestHeaderId]);
-                $entryForeignKeys['response_id'] = $this->formatObjectAndSave('responses', $line->response, ['response_header_id' => $responseHeaderId]);
-                $entryForeignKeys['route_id'] = $this->formatObjectAndSave('routes', $line->route, ['service_id' => $entryForeignKeys['service_id']]);
-
-                $this->insertPivot($line->request->querystring, 'querystrings', 'querystring_request', 'querystring_id', 'request_id', $entryForeignKeys['request_id']);
-                $this->insertPivot($line->route->methods, 'methods', 'method_route', 'method_id', 'route_id', $entryForeignKeys['route_id']);
-                $this->insertPivot($line->route->paths, 'paths', 'path_route', 'path_id', 'route_id', $entryForeignKeys['route_id']);
-                $this->insertPivot($line->route->protocols, 'protocols', 'protocol_route', 'protocol_id', 'route_id', $entryForeignKeys['route_id']);
-
-                $this->formatObjectAndSave('entries', $line, $entryForeignKeys);
+                $this->formatObjectAndSave(
+                    'entries',
+                    $line,
+                    $entryForeignKeys
+                );
 
             } catch (\Exception $e) {
                 return response()->json(['500' => 'Internal Server Error']);
