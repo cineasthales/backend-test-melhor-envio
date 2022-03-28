@@ -45,7 +45,10 @@ php artisan serve
 ```
 
 ## Rotas
-- POST /api/logs -> carrega os dados do arquivo txt e salva no banco de dados, pode ser passado por form-data os campos "offset" e "length" que definem, respectivamente, o deslocamento de linhas a partir do início e a quantidade de linhas a serem processadas no arquivo
-- GET /api/reports/requests-by-consumer -> gera o relatório "requisições por consumidor" em csv
-- GET /api/reports/requests-by-service -> gera o relatório "requisições por serviço" em csv
-- GET /api/reports/average-latencies-by-service -> gera o relatório "tempo médio de request, proxy e gateway" em csv
+- POST /api/logs -> carrega os dados do arquivo txt e salva no banco de dados; pode ser passado por form-data os campos "offset" e "length" que definem, respectivamente, o deslocamento de linhas a partir do início do arquivo e a quantidade de linhas a serem processadas
+- GET /api/reports/requests-by-consumer -> gera o relatório em csv "requisições por consumidor"
+- GET /api/reports/requests-by-consumer/{uuid} -> gera o relatório em csv "requisições por consumidor" de um consumidor específico
+- GET /api/reports/requests-by-service -> gera o relatório em csv "requisições por serviço"
+- GET /api/reports/requests-by-service/{uuid} -> gera o relatório em csv "requisições por serviço" de um serviço específico
+- GET /api/reports/average-latencies-by-service -> gera o relatório em csv "tempo médio de request, proxy e gateway"
+- GET /api/reports/average-latencies-by-service/{uuid} -> gera o relatório em csv "tempo médio de request, proxy e gateway" de um serviço específico
