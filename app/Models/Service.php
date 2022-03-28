@@ -21,6 +21,19 @@ class Service extends Model
             ->get();
     }
 
+    public function requestsBySpecificService($uuid)
+    {
+        return DB::table('services')
+            ->select('services.uuid as service_uuid', 'requests.method', 'requests.uri',
+                'requests.url', 'requests.size', 'request_headers.accept',
+                'request_headers.host', 'request_headers.user_agent')
+            ->join('entries', 'entries.service_id', '=', 'services.id')
+            ->join('requests', 'entries.request_id', '=', 'requests.id')
+            ->join('request_headers', 'requests.request_header_id', '=', 'request_headers.id')
+            ->where('services.uuid', $uuid)
+            ->get();
+    }
+
     public function averageLatenciesByService()
     {
         return DB::table('services')
@@ -30,6 +43,18 @@ class Service extends Model
             ->join('latencies', 'entries.latency_id', '=', 'latencies.id')
             ->groupBy('services.uuid')
             ->orderBy('services.uuid')
+            ->get();
+    }
+
+    public function averageLatenciesBySpecificService($uuid)
+    {
+        return DB::table('services')
+            ->select('services.uuid as service_uuid', DB::raw('avg(proxy) as proxy_average,
+                avg(kong) as kong_average, avg(request) as request_average'))
+            ->join('entries', 'entries.service_id', '=', 'services.id')
+            ->join('latencies', 'entries.latency_id', '=', 'latencies.id')
+            ->where('services.uuid', $uuid)
+            ->groupBy('services.uuid')
             ->get();
     }
 }

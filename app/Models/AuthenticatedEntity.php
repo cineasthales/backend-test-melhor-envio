@@ -20,4 +20,17 @@ class AuthenticatedEntity extends Model
             ->orderBy('authenticated_entities.uuid')
             ->get();
     }
+
+    public function requestsBySpecificConsumer($uuid)
+    {
+        return DB::table('authenticated_entities')
+            ->select('authenticated_entities.uuid as authenticated_entity_uuid', 'requests.method', 'requests.uri',
+                'requests.url', 'requests.size', 'request_headers.accept',
+                'request_headers.host', 'request_headers.user_agent')
+            ->join('entries', 'entries.authenticated_entity_id', '=', 'authenticated_entities.id')
+            ->join('requests', 'entries.request_id', '=', 'requests.id')
+            ->join('request_headers', 'requests.request_header_id', '=', 'request_headers.id')
+            ->where('authenticated_entities.uuid', $uuid)
+            ->get();
+    }
 }

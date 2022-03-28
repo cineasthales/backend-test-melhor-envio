@@ -23,6 +23,11 @@ Route::group(['namespace' => 'Api'], function()
     Route::post('/logs', 'LogController@store');
 
     Route::get('/reports/requests-by-consumer', 'ReportController@generateRequestsByConsumer');
+    Route::get('/reports/requests-by-consumer/{uuid}', 'ReportController@generateRequestsBySpecificConsumer');
+
     Route::get('/reports/requests-by-service', 'ReportController@generateRequestsByService');
+    Route::get('/reports/requests-by-service/{uuid}', 'ReportController@generateRequestsBySpecificService');
+    
     Route::get('/reports/average-latencies-by-service', 'ReportController@generateAverageLatenciesByService');
+    Route::get('/reports/average-latencies-by-service/{uuid}', 'ReportController@generateAverageLatenciesBySpecificService');
 });
