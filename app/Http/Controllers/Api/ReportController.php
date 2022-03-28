@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Exceptions\BadRequest;
 use App\Exceptions\InternalServerError;
+use App\Exceptions\NotFound;
 use App\Http\Controllers\Controller;
 use App\Models\AuthenticatedEntity;
 use App\Models\Service;
@@ -14,15 +14,13 @@ class ReportController extends Controller
 {
     public function generateRequestsByConsumer()
     {
+        $contents = AuthenticatedEntity::requestsByConsumer();
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = AuthenticatedEntity::requestsByConsumer();
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
             $this->generateReport($contents, 'requests_by_consumer');
-
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
@@ -32,15 +30,13 @@ class ReportController extends Controller
 
     public function generateRequestsBySpecificConsumer(Request $request)
     {
+        $contents = AuthenticatedEntity::requestsBySpecificConsumer($request->uuid);
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = AuthenticatedEntity::requestsBySpecificConsumer($request->get('uuid'));
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
-            $this->generateReport($contents, 'requests_by_specific_consumer');
-
+            $this->generateReport($contents, 'requests_by_specific_consumer_' . $request->uuid);
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
@@ -50,15 +46,13 @@ class ReportController extends Controller
 
     public function generateRequestsByService()
     {
+        $contents = Service::requestsByService();
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = Service::requestsByService();
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
             $this->generateReport($contents, 'requests_by_service');
-
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
@@ -68,15 +62,13 @@ class ReportController extends Controller
 
     public function generateRequestsBySpecificService(Request $request)
     {
+        $contents = Service::requestsBySpecificService($request->uuid);
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = Service::requestsBySpecificService($request->get('uuid'));
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
-            $this->generateReport($contents, 'requests_by_specific_service');
-
+            $this->generateReport($contents, 'requests_by_specific_service_' . $request->uuid);
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
@@ -86,15 +78,13 @@ class ReportController extends Controller
 
     public function generateAverageLatenciesByService()
     {
+        $contents = Service::averageLatenciesByService();
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = Service::averageLatenciesByService();
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
             $this->generateReport($contents, 'average_latencies_by_service');
-
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
@@ -104,15 +94,13 @@ class ReportController extends Controller
 
     public function generateAverageLatenciesBySpecificService(Request $request)
     {
+        $contents = Service::averageLatenciesBySpecificService($request->uuid);
+        if (!count($contents)) {
+            throw new NotFound;
+        }
+
         try {
-            $contents = Service::averageLatenciesBySpecificService($request->get('uuid'));
-
-            if (!$contents) {
-                throw new BadRequest;
-            }
-
-            $this->generateReport($contents, 'average_latencies_by_specific_service');
-
+            $this->generateReport($contents, 'average_latencies_by_specific_service_' . $request->uuid);
         } catch (\Exception $e) {
             throw new InternalServerError;
         }
