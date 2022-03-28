@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\BadRequest;
+use App\Exceptions\InternalServerError;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,17 +13,17 @@ class LogController extends Controller
 {
     public function store(Request $request)
     {
-        $offset = $request->offset ? $request->offset : 0;
-        $length = $request->length ? $request->length : 100;
+        $offset = isset($request->offset) ? $request->offset : 0;
+        $length = isset($request->length) ? $request->length : 100;
 
         if ($offset < 0 || $length < 1 || $length > 5000 || ($offset + $length) > 100000) {
-            return response()->json(['400' => 'Bad Request']);
+            throw new BadRequest;
         }
 
         try {
             $text = Storage::disk('logs')->get('logs.txt');
         } catch (\Exception $e) {
-            return response()->json(['500' => 'Internal Server Error']);
+            throw new InternalServerError;
         }
 
         $textLines = preg_split('/\r\n|\r|\n/', $text);
@@ -109,11 +111,11 @@ class LogController extends Controller
                 );
 
             } catch (\Exception $e) {
-                return response()->json(['500' => 'Internal Server Error']);
+                throw new InternalServerError;
             }
         }
 
-        return response()->json(['200' => 'OK']);
+        return response('OK', 200);
     }
 
     private function formatObjectAndSave($tableName, $dataObject, $foreignKeys = null)
